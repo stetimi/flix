@@ -1316,7 +1316,7 @@ object Desugar {
 
     // Make lambda for Functor.map(lambda, ...). This lambda uses all patterns from the for-fragments.
     val lambda = frags0.foldRight(yieldExp) {
-      case (WeededAst.ForFragment.Generator(pat, _, loc1), acc) =>
+      case (WeededAst.ForFragment.Generator(pat, _, _, loc1), acc) =>
         val p = visitPattern(pat)
         mkLambdaMatch(p, acc, loc1)
     }
@@ -1327,7 +1327,7 @@ object Desugar {
 
     // Apply rest of fragments to Applicative.ap
     frags0.tail.foldLeft(baseExp) {
-      case (acc, WeededAst.ForFragment.Generator(_, fexp, loc1)) =>
+      case (acc, WeededAst.ForFragment.Generator(_, _, fexp, loc1)) =>
         val e = visitExp(fexp)
         mkApplyFqn(fqnAp, List(acc, e), loc1)
     }
@@ -1354,7 +1354,7 @@ object Desugar {
     val regVar = DesugaredAst.Expr.Ambiguous(Name.mkQName(regIdent), loc0.asSynthetic)
 
     val foreachExp = frags0.foldRight(visitExp(exp0)) {
-      case (WeededAst.ForFragment.Generator(pat1, exp1, loc1), acc) =>
+      case (WeededAst.ForFragment.Generator(pat1, _, exp1, loc1), acc) =>
         val p1 = visitPattern(pat1)
         val e1 = visitExp(exp1)
         val lambda = mkLambdaMatch(p1, acc, loc1)
@@ -1397,7 +1397,7 @@ object Desugar {
     val e = visitExp(exp0)
     val yieldExp = mkApplyFqn(fqnPoint, List(e), loc0)
     frags0.foldRight(yieldExp) {
-      case (WeededAst.ForFragment.Generator(pat1, exp1, loc1), acc) =>
+      case (WeededAst.ForFragment.Generator(pat1, _, exp1, loc1), acc) =>
         val p1 = visitPattern(pat1)
         val e1 = visitExp(exp1)
         val lambda = mkLambdaMatch(p1, acc, loc1)
@@ -1460,7 +1460,7 @@ object Desugar {
 
     // Desugar loop
     val loop = frags0.foldRight(yieldExp) {
-      case (WeededAst.ForFragment.Generator(pat1, exp1, loc1), acc) =>
+      case (WeededAst.ForFragment.Generator(pat1, _, exp1, loc1), acc) =>
         // Case 1: a generator fragment i.e. `pat <- exp`
         // This should be desugared into
         //     Iterator.flatMap(match pat -> accExp, Iterator.iterator(exp))

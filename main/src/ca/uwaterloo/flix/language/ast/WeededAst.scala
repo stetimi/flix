@@ -471,7 +471,7 @@ object WeededAst {
 
   object ForFragment {
 
-    case class Generator(pat: Pattern, exp: Expr, loc: SourceLocation) extends ForFragment
+    case class Generator(pat: Pattern, tpe: Option[Type], exp: Expr, loc: SourceLocation) extends ForFragment
 
     case class Guard(exp: Expr, loc: SourceLocation) extends ForFragment
 
