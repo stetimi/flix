@@ -2765,7 +2765,7 @@ object Weeder {
     * Performs weeding on the given [[ParsedAst.ForFragment.Generator]] `frag0`.
     */
   private def visitForFragmentGenerator(frag0: ParsedAst.ForFragment.Generator)(implicit flix: Flix): Validation[WeededAst.ForFragment.Generator, WeederError] = frag0 match {
-    case ParsedAst.ForFragment.Generator(sp1, pat, exp, sp2) =>
+    case ParsedAst.ForFragment.Generator(sp1, pat, _, exp, sp2) =>
       val loc = mkSL(sp1, sp2)
       val p = visitPattern(pat)
       val e = visitExp(exp)

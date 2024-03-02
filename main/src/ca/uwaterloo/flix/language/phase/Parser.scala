@@ -650,7 +650,7 @@ class Parser(val source: Source) extends org.parboiled2.Parser {
       }
 
       def GeneratorFragment: Rule1[ParsedAst.ForFragment.Generator] = rule {
-        SP ~ Pattern ~ WS ~ keyword("<-") ~ WS ~ Expression ~ SP ~> ParsedAst.ForFragment.Generator
+        SP ~ Pattern ~ optional(optWS ~ ":" ~ optWS ~ Type) ~ WS ~ keyword("<-") ~ WS ~ Expression ~ SP ~> ParsedAst.ForFragment.Generator
       }
 
       def LetFragment: Rule1[ParsedAst.ForFragment.Let] = rule {

@@ -2202,7 +2202,7 @@ object ParsedAst {
       * @param exp the iterable expression.
       * @param sp2 the position of the last character in the fragment.
       */
-    case class Generator(sp1: SourcePosition, pat: ParsedAst.Pattern, exp: ParsedAst.Expression, sp2: SourcePosition) extends ForFragment
+    case class Generator(sp1: SourcePosition, pat: ParsedAst.Pattern, tpe: Option[ParsedAst.Type], exp: ParsedAst.Expression, sp2: SourcePosition) extends ForFragment
 
     /**
       * A guard fragment, e.g., `if x > 1`.
