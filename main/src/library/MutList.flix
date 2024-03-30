@@ -68,14 +68,16 @@ mod MutList {
         MutList(rc, ref Array.init(rc, f, c) @ rc, ref d @ rc)
 
     ///
-    /// Optionally returns the element at position `i` in the mutable list `v`.
+    /// Returns the n'th element of the MutList
     ///
-    pub def nth(i: Int32, v: MutList[a, r]): Option[a] \ r =
+    /// If n is negative or the MutList's length is less than n, then an IndexOutOfBounds effect is thrown.
+    ///
+    pub def nth(n: Int32, v: MutList[a, r]): a \ {r, IndexOutOfBounds} =
         let MutList(_, a, l) = v;
-        if (0 <= i and i < deref l)
-            Array.nth(i, deref a)
+        if (0 <= n and n < deref l)
+            Array.nth(n, deref a)
         else
-            None
+            do IndexOutOfBounds.throw("Index ${n} out of bounds")
 
     ///
     /// Returns the number of elements in the given mutable list `v`.

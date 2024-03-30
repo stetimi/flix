@@ -164,6 +164,20 @@ mod Nel {
     }
 
     ///
+    /// Returns the `n`'th element of `l`
+    ///
+    /// If `n` is negative or the length is less than `n`, then an `IndexOutOfBounds` effect is thrown.
+    ///
+    pub def nth(n: Int32, l: Nel[a]): a \ IndexOutOfBounds = match (n, l) {
+        case (0, Nel(x, _)) => x
+        case (_, Nel(_, xs)) => try {
+            List.nth(n - 1, xs)
+        } with IndexOutOfBounds {
+            def throw(_, _) = do IndexOutOfBounds.throw("Index ${n} out of bounds")
+        }
+    }
+
+    ///
     /// Returns all elements in `l` without the last element.
     ///
     pub def init(l: Nel[a]): List[a] = match l {

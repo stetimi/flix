@@ -2962,3 +2962,21 @@ def frequency04(): Bool =
     let m = Map#{};
     Assert.eq(m, List.frequency(l))
 }
+
+@test
+def nth01(): Bool = {
+    let empty: List[Char] = Nil;
+    Assert.eq(Err("Index 0 out of bounds"), indexOutOfBoundsToResult(() -> List.nth(0, empty)))
+}
+
+@test
+def nth02(): Bool = Assert.eq(Err("Index -5 out of bounds"), indexOutOfBoundsToResult(() -> List.nth(-5, List#{1,2,3})))
+
+@test
+def nth03(): Bool = Assert.eq(Ok("a"), indexOutOfBoundsToResult(() -> List#{"a"} |> List.nth(0)))
+
+@test
+def nth04(): Bool = Assert.eq(Ok("c"), indexOutOfBoundsToResult(() -> List#{"a", "b", "c"} |> List.nth(2)))
+
+@test
+def nth05(): Bool = Assert.eq(Ok("c"), indexOutOfBoundsToResult(() -> List#{"a", "b", "c", "d"} |> List.nth(2)))

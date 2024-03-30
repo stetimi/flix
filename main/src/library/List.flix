@@ -182,6 +182,20 @@ mod List {
     }
 
     ///
+    /// Returns the `n`'th element of `l`
+    ///
+    /// If `n` is negative or the length is less than `n`, then an `IndexOutOfBounds` effect is thrown.
+    ///
+    pub def nth(n: Int32, l: List[a]): a \ IndexOutOfBounds = {
+        def loop(n1, l1) = match (n1, l1) {
+            case (_, Nil) => do IndexOutOfBounds.throw("Index ${n} out of bounds")
+            case (0, h :: _) => h
+            case (_, _ :: t) => loop(n1 - 1, t)
+        };
+        loop(n, l)
+    }
+
+    ///
     /// Returns the length of `l`.
     ///
     pub def length(l: List[a]): Int32 =
@@ -508,11 +522,11 @@ mod List {
     ///
     /// Helper function for `permutations`.
     ///
-    def at(i: Int32, l: List[a]): a = match (i, l) {
-        case (0, x :: _)  => x
-        case (p, _ :: xs) => at(p - 1, xs)
-        case _ => unreachable!()
-    }
+    def at(i: Int32, l: List[a]): a = try {
+        nth(i, l)
+    } with IndexOutOfBounds {
+       def throw(_, _) = unreachable!()
+   }
 
     ///
     /// Helper function for `permutations`.

@@ -108,12 +108,12 @@ mod TestVector {
     @test
     def singleton01(): Bool =
         let v = Vector.singleton(0);
-        Vector.nth(0, v) == Some(0)
+        Assert.eqHandlingIndexOutOfBounds(0, () -> Vector.nth(0, v))
 
     @test
     def singleton02(): Bool =
         let v = Vector.singleton('A');
-        Vector.nth(0, v) == Some('A')
+        Assert.eqHandlingIndexOutOfBounds('A', () -> Vector.nth(0, v))
 
     /////////////////////////////////////////////////////////////////////////////
     // nth                                                                     //
@@ -121,23 +121,23 @@ mod TestVector {
 
     @test
     def nth01(): Bool =
-        Vector.nth(0, Vector#{1, 2, 3}) == Some(1)
+        Assert.eq(Ok(1), indexOutOfBoundsToResult(() -> Vector.nth(0, Vector#{1, 2, 3})))
 
     @test
     def nth02(): Bool =
-        Vector.nth(1, Vector#{1, 2, 3}) == Some(2)
+        Assert.eq(Ok(2), indexOutOfBoundsToResult(() -> Vector.nth(1, Vector#{1, 2, 3})))
 
     @test
     def nth03(): Bool =
-        Vector.nth(2, Vector#{1, 2, 3}) == Some(3)
+        Assert.eq(Ok(3), indexOutOfBoundsToResult(() -> Vector.nth(2, Vector#{1, 2, 3})))
 
     @test
     def nth04(): Bool =
-        Vector.nth(3, Vector#{1, 2, 3}) == None
+        Assert.eq(Err("Index 3 out of bounds"), indexOutOfBoundsToResult(() -> Vector.nth(3, Vector#{1, 2, 3})))
 
     @test
     def nth05(): Bool =
-        Vector.nth(-2, Vector#{1, 2, 3}) == None
+        Assert.eq(Err("Index -2 out of bounds"), indexOutOfBoundsToResult(() -> Vector.nth(-2, Vector#{1, 2, 3})))
 
     /////////////////////////////////////////////////////////////////////////////
     // isEmpty                                                                 //
@@ -4294,5 +4294,4 @@ mod TestVector {
         let v = Vector#{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         let v1 = Vector.shuffle(Random.fresh(), v);
         Vector.length(v1) == 10 and Vector.toSet(v1) == Set#{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-
 }

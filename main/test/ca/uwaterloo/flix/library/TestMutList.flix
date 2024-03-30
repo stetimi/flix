@@ -117,46 +117,46 @@ mod TestMutList {
 
     @test
     def nth01(): Bool = region rc {
-        MutList.nth(0, (MutList.empty(rc): MutList[Int32, _])) == None
+        Assert.eq(Err("Index 0 out of bounds"), indexOutOfBoundsToResult(() -> MutList.nth(0, (MutList.empty(rc): MutList[Int32, _]))))
     }
 
     @test
     def nth02(): Bool = region rc {
         let v = MutList.empty(rc);
         MutList.push!(42, v);
-        MutList.nth(0, v) == Some(42)
+        Assert.eq(Ok(42), indexOutOfBoundsToResult(() -> MutList.nth(0, v)))
     }
 
     @test
     def nth03(): Bool = region rc {
         let v = MutList.empty(rc);
         MutList.push!(42, v);
-        MutList.nth(1, v) == None
+        Assert.eq(Err("Index 1 out of bounds"), indexOutOfBoundsToResult(() ->MutList.nth(1, v)))
     }
 
     @test
     def nth04(): Bool = region rc {
-        MutList.nth(1, MutList.range(rc, 0, 2)) == Some(1)
+        Assert.eq(Ok(1), indexOutOfBoundsToResult(() -> MutList.nth(1, MutList.range(rc, 0, 2))))
     }
 
     @test
     def nth05(): Bool = region rc {
-        MutList.nth(3, MutList.range(rc, 0, 4)) == Some(3)
+        Assert.eq(Ok(3), indexOutOfBoundsToResult(() -> MutList.nth(3, MutList.range(rc, 0, 4))))
     }
 
     @test
     def nth06(): Bool = region rc {
-        MutList.nth(30, MutList.range(rc, 0, 42)) == Some(30)
+        Assert.eq(Ok(30), indexOutOfBoundsToResult(() -> MutList.nth(30, MutList.range(rc, 0, 42))))
     }
 
     @test
     def nth07(): Bool = region rc {
-        MutList.nth(-30, MutList.range(rc, 0, 42)) == None
+        Assert.eq(Err("Index -30 out of bounds"), indexOutOfBoundsToResult(() -> MutList.nth(-30, MutList.range(rc, 0, 42))))
     }
 
     @test
     def nth08(): Bool = region rc {
-        MutList.nth(50, MutList.range(rc, 0, 42)) == None
+        Assert.eq(Err("Index 50 out of bounds"), indexOutOfBoundsToResult(() -> MutList.nth(50, MutList.range(rc, 0, 42))))
     }
 
 
@@ -1059,7 +1059,7 @@ mod TestMutList {
         MutList.push!(42, v);
         MutList.push!(31, v);
         MutList.push!(1019, v);
-        MutList.length(v) == 3 and MutList.nth(0, v) == Some(42) and MutList.nth(1, v) == Some(31) and MutList.nth(2, v) == Some(1019)
+        Assert.eq(List#{42, 31, 1019}, MutList.toList(v))
     }
 
     @test
@@ -1069,9 +1069,8 @@ mod TestMutList {
         MutList.push!(0, v);
         MutList.push!(0, v);
         MutList.push!(0, v);
-        MutList.length(v) == 4 and MutList.nth(0, v) == Some(0) and MutList.nth(1, v) == Some(0) and MutList.nth(2, v) == Some(0) and MutList.nth(3, v) == Some(0)
+        Assert.eq(List#{0, 0, 0, 0}, MutList.toList(v))
     }
-
 
     /////////////////////////////////////////////////////////////////////////////
     // insert!                                                                 //
@@ -1137,7 +1136,7 @@ mod TestMutList {
         MutList.insert!(98, 1, v);
         MutList.insert!(99, 2, v);
         MutList.insert!(107, 1, v);
-        MutList.length(v) == 4 and MutList.nth(1, v) == Some(107)
+        MutList.length(v) == 4 and indexOutOfBoundsToResult(() -> MutList.nth(1, v)) == Ok(107)
     }
 
     @test
@@ -1801,7 +1800,7 @@ mod TestMutList {
         let v = Array.toMutList(rc, Array#{1, 2, 3} @ rc);
         let a = MutList.toArray(rc, v);
         Array.put(42, 1, a);
-        MutList.nth(1, v) == Some(2)
+        Assert.eq(Ok(2), indexOutOfBoundsToResult(() -> MutList.nth(1, v)))
     }
 
     @test
@@ -2591,5 +2590,4 @@ mod TestMutList {
 
         MutList.length(v) == 10 and v `MutList.sameElements` List.toMutList(rc, l)
     }
-
 }

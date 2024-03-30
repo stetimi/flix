@@ -193,3 +193,16 @@ pub def purityOf3(f: a -> b -> c -> d \ ef): Purity3[a, b, c, d, ef] = typematch
     case g: a -> b -> c -> d \ Pure => Purity3.Pure(g)
     case _: _                       => Purity3.Impure(f)
 }
+
+///
+/// An effect raised to indicate that an index is out of range.
+///
+pub eff IndexOutOfBounds {
+    pub def throw(msg: String): Void
+}
+
+pub def indexOutOfBoundsToResult(f: Unit -> a \ {e, IndexOutOfBounds}): Result[String, a] = try {
+    Ok(f())
+} with IndexOutOfBounds {
+    def throw(msg, _) = Err(msg)
+}

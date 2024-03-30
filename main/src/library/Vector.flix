@@ -189,13 +189,15 @@ mod Vector {
     pub def get(i: Int32, v: Vector[a]): a = $VECTOR_GET$(v, i)
 
     ///
-    /// Optionally returns the element at position `i` in the vector `v`.
+    /// Returns the `n`'th element of `v`
     ///
-    pub def nth(i: Int32, v: Vector[a]): Option[a] =
-        if (0 <= i and i < length(v))
-            Some(get(i, v))
+    /// If `n` is negative or the length is less than `n`, then an `IndexOutOfBounds` effect is thrown.
+    ///
+    pub def nth(n: Int32, v: Vector[a]): a \ IndexOutOfBounds =
+        if (0 <= n and n < length(v))
+            get(n, v)
         else
-            None
+            do IndexOutOfBounds.throw("Index ${n} out of bounds")
 
     ///
     /// Returns `true` if the given vector `v` is empty.
@@ -285,7 +287,7 @@ mod Vector {
     /// Returns `None` if `v` is empty.
     ///
     pub def head(v: Vector[a]): Option[a] =
-        nth(0, v)
+        indexOutOfBoundsToResult(() -> nth(0, v)) |> Result.toOption
 
     ///
     /// Returns `Some(x)` if `x` is the last element of `v`.
@@ -293,7 +295,7 @@ mod Vector {
     /// Returns `None` if `v` is empty.
     ///
     pub def last(v: Vector[a]): Option[a] =
-        nth(length(v) - 1, v)
+        indexOutOfBoundsToResult(() -> nth(length(v) - 1, v)) |> Result.toOption
 
     ///
     /// Return a new vector, appending the elements `v2` after elements of `v1`.

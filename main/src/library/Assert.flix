@@ -33,4 +33,18 @@ mod Assert {
         }
     })
 
+    pub def eqHandlingIndexOutOfBounds(expected: a, f: Unit -> a \ IndexOutOfBounds): Bool with Eq[a], ToString[a] =
+        try {
+            Assert.eq(expected, f())
+        } with IndexOutOfBounds {
+            def throw(_, _) = false
+        }
+
+    pub def throwsIndexOutOfBounds(expectedMsg: String, f: Unit -> a \ IndexOutOfBounds): Bool =
+        try {
+            discard f();
+            false
+        } with IndexOutOfBounds {
+            def throw(msg, _k) = Assert.eq(expectedMsg, msg)
+        }
 }

@@ -1331,6 +1331,36 @@ mod TestDelayList {
 
 
     /////////////////////////////////////////////////////////////////////////////
+    // nth                                                                     //
+    /////////////////////////////////////////////////////////////////////////////
+
+    @test
+    def nth01(): Bool =
+        Assert.eq(Err("Index 0 out of bounds"), indexOutOfBoundsToResult(() -> DelayList.nth(0, (ENil: DelayList[Unit]))))
+
+    @test
+    def nth02(): Bool =
+        Assert.eq(Err("Index 0 out of bounds"), indexOutOfBoundsToResult(() -> DelayList.nth(0, (LList(lazy ENil): DelayList[Unit]))))
+
+    @test
+    def nth03(): Bool =
+        indexOutOfBoundsToResult(() -> DelayList.range(0, 1) |> DelayList.nth(0)) == Ok(0)
+
+    @test
+    def nth04(): Bool =
+    	let l = ECons(1, ECons(2, ENil));
+        Assert.eq(Ok(2), indexOutOfBoundsToResult(() -> DelayList.nth(1, l)))
+
+    @test
+    def nth05(): Bool =
+        let l = LList(lazy LCons(1, lazy LList(lazy ECons(2, ECons(3, LList(lazy ENil))))));
+    	Assert.eq(Ok(3), indexOutOfBoundsToResult(() -> DelayList.nth(2, l)))
+
+    @test
+    def nth06(): Bool =
+        Assert.eq(Ok(900), indexOutOfBoundsToResult(() -> DelayList.range(0, 1000) |> DelayList.nth(900)))
+
+    /////////////////////////////////////////////////////////////////////////////
     // iterator                                                              //
     /////////////////////////////////////////////////////////////////////////////
 

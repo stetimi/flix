@@ -201,6 +201,25 @@ mod DelayList {
     }
 
     ///
+    /// Returns the n'th element of `l`.
+    ///
+    ///  Forces the list `l` up until the `n`'th element, or the entire list if `n` is more than the length.
+    ///
+    /// If `n` is negative or the length is less than `n`, then an `IndexOutOfBounds` effect is thrown.
+    ///
+    @Experimental
+    pub def nth(n: Int32, l: DelayList[a]): a \ IndexOutOfBounds =
+        def loop(n1, l1): a \ IndexOutOfBounds = match (n1, l1) {
+            case (_, ENil) => do IndexOutOfBounds.throw("Index ${n} out of bounds")
+            case (0, ECons(x, _)) => x
+            case (_, ECons(_, xs)) => loop(n1 - 1, xs)
+            case (0, LCons(x, _)) => x
+            case (_, LCons(_, xs)) => loop(n1 - 1, force xs)
+            case (_, LList(xs)) => loop(n1, force xs)
+        };
+        loop(n, l)
+
+    ///
     /// Returns `l` without the first element.
     ///
     /// Does not force the tail of `l`.

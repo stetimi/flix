@@ -70,6 +70,22 @@ mod TestNel {
     def last03(): Bool = Nel.last(Nel(123, 1 :: 2 :: Nil)) == 2
 
     /////////////////////////////////////////////////////////////////////////////
+    // nth                                                                    //
+    /////////////////////////////////////////////////////////////////////////////
+
+    @test
+    def nth00(): Bool =
+        Assert.eq(Err("Index 1 out of bounds"), indexOutOfBoundsToResult(() -> Nel.nth(0, Nel(1, Nil))))
+
+    @test
+    def nth01(): Bool =
+        Assert.eq(Ok(0), indexOutOfBoundsToResult(() -> Nel.nth(0, Nel(0, Nil))))
+
+    @test
+    def nth02(): Bool =
+        Assert.eq(Ok(2), indexOutOfBoundsToResult(() -> Nel.nth(2, Nel(0, List#{1,2,3}))))
+
+    /////////////////////////////////////////////////////////////////////////////
     // init                                                                    //
     /////////////////////////////////////////////////////////////////////////////
 

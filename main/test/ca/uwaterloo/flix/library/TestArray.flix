@@ -82,27 +82,27 @@ mod TestArray {
 
     @test
     def testNth01(): Bool = region rc {
-        Array.nth(0, Array#{1, 2, 3} @ rc) == Some(1)
+        Assert.eq(Ok(1), indexOutOfBoundsToResult(() -> Array.nth(0, Array#{1, 2, 3} @ rc)))
     }
 
     @test
     def testNth02(): Bool = region rc {
-        Array.nth(1, Array#{1, 2, 3} @ rc) == Some(2)
+        Assert.eq(Ok(2), indexOutOfBoundsToResult(() -> Array.nth(1, Array#{1, 2, 3} @ rc)))
     }
 
     @test
     def testNth03(): Bool = region rc {
-        Array.nth(2, Array#{1, 2, 3} @ rc) == Some(3)
+        Assert.eq(Ok(3), indexOutOfBoundsToResult(() -> Array.nth(2, Array#{1, 2, 3} @ rc)))
     }
 
     @test
     def testNth04(): Bool = region rc {
-        Array.nth(3, Array#{1, 2, 3} @ rc) == None
+        Assert.eq(Err("Index 3 out of bounds"), indexOutOfBoundsToResult(() -> Array.nth(3, Array#{1, 2, 3} @ rc)))
     }
 
     @test
     def testNth05(): Bool = region rc {
-        Array.nth(-2, Array#{1, 2, 3} @ rc) == None
+        Assert.eq(Err("Index -2 out of bounds"), indexOutOfBoundsToResult(() -> Array.nth(-2, Array#{1, 2, 3} @ rc)))
     }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -6012,5 +6012,4 @@ mod TestArray {
         Array.shuffle(Random.fresh(), a);
         Array.length(a) == 10 and Array.toSet(a) == Set#{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
     }
-
 }

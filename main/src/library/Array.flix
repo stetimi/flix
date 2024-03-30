@@ -76,13 +76,15 @@ mod Array {
         $ARRAY_STORE$(a, i, x)
 
     ///
-    /// Optionally returns the element at position `i` in the array `a`.
+    /// Returns the n'th element of the Array
     ///
-    pub def nth(i: Int32, a: Array[a, r]): Option[a] \ r =
-        if (0 <= i and i < length(a))
-            Some(get(i, a))
+    /// If n is negative or the Array's length is less than n, then an IndexOutOfBounds effect is thrown.
+    ///
+    pub def nth(n: Int32, a: Array[a, r]): a \ {r, IndexOutOfBounds} =
+        if (0 <= n and n < length(a))
+            get(n, a)
         else
-            None
+            do IndexOutOfBounds.throw("Index ${n} out of bounds")
 
     ///
     /// Returns `true` if the given array `a` is empty.

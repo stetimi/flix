@@ -96,6 +96,15 @@ pub trait Foldable[t : Type -> Type] {
         Foldable.foldRightWithCont((x, k) -> Option.withDefault(default = Some(x), k()), None, t)
 
     ///
+    /// Returns the n'th element of t
+    ///
+    /// If n is negative or t does not have an n'th element, then an IndexOutOfBounds effect is thrown.
+    ///
+    pub def nth(n: Int32, t: t[a]): a \ IndexOutOfBounds = region rc {
+        Foldable.toArray(rc, t) |> Array.nth(n)
+    }
+
+    ///
     /// Optionally returns the first element of `t` that satisfies the predicate `f` when searching from left to right.
     ///
     /// Returns `None` if `t` is empty.

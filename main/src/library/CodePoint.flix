@@ -262,7 +262,7 @@ mod CodePoint {
     }
 
     ///
-    /// Optionally returns a Char represention the code point `cp` if `cp` is within
+    /// Optionally returns a Char representation of the code point `cp` if `cp` is within
     /// Unicode's Basic Multilingual Plane.
     ///
     pub def toBmpChar(cp: Int32): Option[Char] = try {
@@ -271,7 +271,7 @@ mod CodePoint {
             let arr = Array.empty(rc, 2);
             let i = toChars(cp, arr, 0);
             if (i == 1)
-                Array.nth(0, arr)
+                indexOutOfBoundsToResult(() -> Array.nth(0, arr)) |> Result.toOption
             else
                 None
         }
