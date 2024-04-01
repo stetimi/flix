@@ -1,0 +1,16 @@
+mod TestIndexOutOfBounds {
+    @test
+    pub def convertsToOkIfNotThrowing(): Bool =
+        Ok(5) == IndexOutOfBounds.toResult(() -> f(5))
+
+    @test
+    pub def convertsToErrIfNotThrowing(): Bool =
+        Err("Index 6 out of bounds") == IndexOutOfBounds.toResult(() -> f(6))
+
+    def f(n: Int32): Int32 =
+        if (n > 5) {
+            do IndexOutOfBounds.throw("Index ${n} out of bounds")
+        } else {
+            n
+        }
+}
