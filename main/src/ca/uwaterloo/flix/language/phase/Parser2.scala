@@ -149,7 +149,7 @@ object Parser2 {
     // ArrayDeque). Lists are fastest here though since they have constant time prepend (+:) and
     // tail implementations. We use prepend on Event.Open and stack.tail on Event.Close.
     var stack: List[SyntaxTree.Tree] = List.empty
-    var locationStack: List[Token] = List.empty
+    var locationStack: List[SourcePosition] = List.empty
 
     // Pop the last event, which must be a Close, to ensure that the stack is not empty when
     // handling event below.
@@ -164,32 +164,36 @@ object Parser2 {
     val b = SourcePosition.firstPosition(s.src)
     val e = SourcePosition.firstPosition(s.src)
     var lastAdvance = Token(TokenKind.Eof, s.src, 0, 0, b, e)
+    var i = 0
     for (event <- s.events) {
+      if(s.src.toString.contains("play")) {
+        println(s"$i -> $event -> ${tokens.head}")
+        i = i + 1
+      }
       event match {
         case Event.Open(kind) =>
-          locationStack = tokens.head +: locationStack
+          locationStack = tokens.head.sp1 +: locationStack
           stack = SyntaxTree.Tree(kind, Array.empty, SourceLocation.Unknown) +: stack
 
         case Event.Close =>
-          val child = stack.head
-          val openToken = locationStack.head
-          stack.head.loc = if (stack.head.children.length == 0)
-          // If the subtree has no children, give it a zero length position just after the last
-          // token.
+          stack.head.loc = if (stack.head.children.length == 0) {
+            // If the subtree has no children, give it a zero length position just after the last token.
             SourceLocation(
               isReal = true,
               lastAdvance.sp2,
               lastAdvance.sp2
             )
-          else
-          // Otherwise the source location can span from the first to the last token in the sub
-          // tree.
+          } else {
+            // Otherwise the source location can span from the first to the last token in the sub tree.
+            val openSourcePosition = locationStack.head
             SourceLocation(
               isReal = true,
-              openToken.sp1,
+              openSourcePosition,
               lastAdvance.sp2
             )
+          }
           locationStack = locationStack.tail
+          val child = stack.head
           stack = stack.tail
           stack.head.children = stack.head.children :+ child
 

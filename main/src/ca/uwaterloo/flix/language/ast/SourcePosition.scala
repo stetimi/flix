@@ -98,4 +98,5 @@ final class SourcePosition private(val source: Source, val lineOneIndexed: Int, 
   /** Returns the hashCode of `this` source position. */
   override def hashCode(): Int = source.hashCode() + lineOneIndexed + colOneIndexed
 
+  override def toString(): String = s"SourcePosition{$source:($lineOneIndexed,$colOneIndexed)}"
 }
